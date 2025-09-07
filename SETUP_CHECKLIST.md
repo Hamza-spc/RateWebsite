@@ -4,6 +4,7 @@ Use this checklist to ensure your friend doesn't miss anything when setting up t
 
 ## 🚀 Essential Setup (Must Do)
 
+- [ ] **Navigate to Desktop**: `cd ~/Desktop`
 - [ ] **Clone repository**: `git clone https://github.com/Hamza-spc/RateWebsite.git`
 - [ ] **Navigate to project**: `cd RateWebsite`
 - [ ] **Create virtual environment**: `python -m venv venv`

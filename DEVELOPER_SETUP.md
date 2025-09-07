@@ -16,9 +16,19 @@ Before starting, make sure you have:
 ### 1. Clone the Repository
 
 ```bash
+# Navigate to your desired directory (Desktop is perfect!)
+cd ~/Desktop
+
+# Clone the repository
 git clone https://github.com/Hamza-spc/RateWebsite.git
 cd RateWebsite
 ```
+
+**Note:** Your friend can clone the project anywhere they want:
+- `~/Desktop` (recommended - easy to find)
+- `~/Documents`
+- `~/Projects`
+- Any other directory they prefer
 
 ### 2. Create Virtual Environment
 
