@@ -11,26 +11,58 @@ Before starting, make sure you have:
 - **pip** (Python package installer)
 - **Code editor** (VS Code, PyCharm, etc.)
 
+### Windows-Specific Notes:
+- **Command Prompt**: Use Command Prompt or PowerShell
+- **Python**: Make sure Python is added to PATH during installation
+- **Git**: Download from [git-scm.com](https://git-scm.com/download/win)
+- **VS Code**: Recommended editor with Python extension
+
 ## 🔧 Step-by-Step Setup
 
 ### 1. Clone the Repository
 
-```bash
+**For Windows users:**
+```cmd
+# Navigate to your desired directory (Desktop is perfect!)
+cd %USERPROFILE%\Desktop
+
+# Clone the repository
 git clone https://github.com/Hamza-spc/RateWebsite.git
 cd RateWebsite
 ```
 
+**For macOS/Linux users:**
+```bash
+# Navigate to your desired directory (Desktop is perfect!)
+cd ~/Desktop
+
+# Clone the repository
+git clone https://github.com/Hamza-spc/RateWebsite.git
+cd RateWebsite
+```
+
+**Note:** Your friend can clone the project anywhere they want:
+- **Windows**: `%USERPROFILE%\Desktop` or `C:\Users\[username]\Desktop`
+- **macOS/Linux**: `~/Desktop` or `~/Documents` or `~/Projects`
+
 ### 2. Create Virtual Environment
 
+**For Windows users:**
+```cmd
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+venv\Scripts\activate
+```
+
+**For macOS/Linux users:**
 ```bash
 # Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
-# On macOS/Linux:
 source venv/bin/activate
-# On Windows:
-venv\Scripts\activate
 ```
 
 ### 3. Install Dependencies

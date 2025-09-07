@@ -4,10 +4,15 @@ Use this checklist to ensure your friend doesn't miss anything when setting up t
 
 ## 🚀 Essential Setup (Must Do)
 
+- [ ] **Navigate to Desktop**: 
+  - Windows: `cd %USERPROFILE%\Desktop`
+  - macOS/Linux: `cd ~/Desktop`
 - [ ] **Clone repository**: `git clone https://github.com/Hamza-spc/RateWebsite.git`
 - [ ] **Navigate to project**: `cd RateWebsite`
 - [ ] **Create virtual environment**: `python -m venv venv`
-- [ ] **Activate virtual environment**: `source venv/bin/activate` (macOS/Linux) or `venv\Scripts\activate` (Windows)
+- [ ] **Activate virtual environment**: 
+  - Windows: `venv\Scripts\activate`
+  - macOS/Linux: `source venv/bin/activate`
 - [ ] **Install dependencies**: `pip install -r requirements.txt`
 - [ ] **Copy environment file**: `cp env_example.txt .env`
 - [ ] **Run migrations**: `python manage.py migrate`
