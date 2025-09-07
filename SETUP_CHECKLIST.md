@@ -53,6 +53,7 @@ Use this checklist to ensure your friend doesn't miss anything when setting up t
 ## 🎉 Success Indicators
 
 If everything is working correctly, you should see:
+
 - ✅ Homepage loads with beautiful design
 - ✅ Can browse and search venues
 - ✅ Can create user accounts

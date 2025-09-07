@@ -15,7 +15,7 @@ class Command(BaseCommand):
         # Update site domain
         site = Site.objects.get_current()
         site.domain = '127.0.0.1:8000'
-        site.name = 'VenueRate'
+        site.name = 'TourInsight'
         site.save()
         self.stdout.write(self.style.SUCCESS('Updated site domain'))
 

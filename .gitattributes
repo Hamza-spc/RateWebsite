@@ -79,3 +79,4 @@ Pipfile.lock linguist-vendored
 static/** linguist-vendored
 staticfiles/** linguist-vendored
 media/** linguist-vendored
+

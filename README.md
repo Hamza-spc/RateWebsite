@@ -1,6 +1,6 @@
-# VenueRate - Venue Rating System
+# TourInsight - Venue Rating System
 
-A Django-based web application for discovering, rating, and reviewing venues like hotels, restaurants, cafes, and more.
+A Django-based web application for discovering, rating, and reviewing venues like hotels, restaurants, cafes, and more. TourInsight helps travelers make informed decisions with real reviews and ratings.
 
 ## Features
 
@@ -31,23 +31,27 @@ A Django-based web application for discovering, rating, and reviewing venues lik
 ### Setup Instructions
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-github-repo-url>
    cd website
    ```
 
 2. **Create a virtual environment**
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Set up environment variables**
+
    ```bash
    cp env_example.txt .env
    # Edit .env with your configuration
@@ -56,21 +60,25 @@ A Django-based web application for discovering, rating, and reviewing venues lik
    **Important:** The project will work without Google OAuth setup, but you'll need to configure it for the "Sign in with Google" feature to work.
 
 5. **Run database migrations**
+
    ```bash
    python manage.py migrate
    ```
 
 6. **Create a superuser**
+
    ```bash
    python manage.py createsuperuser
    ```
 
 7. **Load sample data (optional)**
+
    ```bash
    python manage.py loaddata sample_data.json
    ```
 
 8. **Start the development server**
+
    ```bash
    python manage.py runserver
    ```
@@ -81,12 +89,16 @@ A Django-based web application for discovering, rating, and reviewing venues lik
 ## Optional Setup
 
 ### Video Background (Homepage)
+
 The homepage has a video background that will fallback to a gradient if no video is found. To add a video:
+
 1. Place your video file in `assets/videos/` as `hero-video.mp4`
 2. The video should be in MP4 format and optimized for web
 
 ### Google OAuth (Optional)
+
 The "Sign in with Google" feature requires additional setup:
+
 1. Get Google OAuth credentials from [Google Cloud Console](https://console.cloud.google.com/)
 2. Add them to your `.env` file:
    ```env
@@ -100,7 +112,7 @@ The "Sign in with Google" feature requires additional setup:
 ## Project Structure
 
 ```
-website/
+TourInsight/
 ├── accounts/                 # User authentication app
 ├── venues/                   # Main venues app
 │   ├── management/           # Custom management commands
@@ -114,7 +126,7 @@ website/
 ├── templates/                # Base templates
 ├── static/                   # Static files (CSS, JS, images)
 ├── assets/                   # Additional assets
-├── venue_rating_system/      # Main project settings
+├── tour_insight_system/      # Main project settings
 │   ├── settings.py          # Development settings
 │   ├── settings_production.py # Production settings
 │   ├── urls.py              # Main URL configuration
