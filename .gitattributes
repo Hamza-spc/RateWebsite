@@ -1,0 +1,81 @@
+# Tell GitHub to ignore HTML templates when calculating language stats
+templates/**/*.html linguist-vendored
+static/**/*.html linguist-vendored
+staticfiles/**/*.html linguist-vendored
+
+# Tell GitHub to ignore CSS files
+static/**/*.css linguist-vendored
+staticfiles/**/*.css linguist-vendored
+
+# Tell GitHub to ignore JavaScript files
+static/**/*.js linguist-vendored
+staticfiles/**/*.js linguist-vendored
+
+# Tell GitHub to ignore image files
+static/**/*.png linguist-vendored
+static/**/*.jpg linguist-vendored
+static/**/*.jpeg linguist-vendored
+static/**/*.gif linguist-vendored
+static/**/*.svg linguist-vendored
+static/**/*.ico linguist-vendored
+staticfiles/**/*.png linguist-vendored
+staticfiles/**/*.jpg linguist-vendored
+staticfiles/**/*.jpeg linguist-vendored
+staticfiles/**/*.gif linguist-vendored
+staticfiles/**/*.svg linguist-vendored
+staticfiles/**/*.ico linguist-vendored
+
+# Tell GitHub to ignore video files
+assets/**/*.mp4 linguist-vendored
+assets/**/*.mov linguist-vendored
+assets/**/*.avi linguist-vendored
+
+# Tell GitHub to ignore documentation files
+*.md linguist-documentation
+DATABASE_GUIDE.md linguist-documentation
+SETUP_GUIDE.md linguist-documentation
+
+# Tell GitHub to ignore test files
+test_*.py linguist-vendored
+*_test.py linguist-vendored
+
+# Tell GitHub to ignore migration files (they're auto-generated)
+*/migrations/*.py linguist-vendored
+
+# Tell GitHub to ignore environment files
+.env linguist-vendored
+.env.* linguist-vendored
+venv/** linguist-vendored
+
+# Tell GitHub to ignore database files
+*.sqlite3 linguist-vendored
+*.db linguist-vendored
+
+# Tell GitHub to ignore log files
+*.log linguist-vendored
+
+# Tell GitHub to ignore compiled Python files
+__pycache__/** linguist-vendored
+*.pyc linguist-vendored
+*.pyo linguist-vendored
+
+# Tell GitHub to ignore IDE files
+.vscode/** linguist-vendored
+.idea/** linguist-vendored
+*.swp linguist-vendored
+*.swo linguist-vendored
+
+# Tell GitHub to ignore OS files
+.DS_Store linguist-vendored
+Thumbs.db linguist-vendored
+
+# Tell GitHub to ignore requirements and setup files
+requirements.txt linguist-vendored
+setup.py linguist-vendored
+Pipfile linguist-vendored
+Pipfile.lock linguist-vendored
+
+# Tell GitHub to ignore static files
+static/** linguist-vendored
+staticfiles/** linguist-vendored
+media/** linguist-vendored
