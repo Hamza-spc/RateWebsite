@@ -1,0 +1,323 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Add Venue - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Add New Venue</h1>
+                    <p class="text-lg text-gray-600 mt-2">
+                        {% if category_slug %}
+                            Create a new {{ category_slug|title }} listing
+                        {% else %}
+                            Create a new venue listing
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="flex space-x-2">
+                    {% if category_slug %}
+                        <a href="{% url 'venues:admin_venues_by_category' category_slug %}" 
+                           class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                            Back to {{ category_slug|title }}
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'venues:admin_dashboard' %}" 
+                       class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Basic Information -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Basic Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Venue Name *
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Category *
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.category.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Description *
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Location</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Address *
+                            </label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.address.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                    City *
+                                </label>
+                                {{ form.city }}
+                                {% if form.city.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.city.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div>
+                                <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Country *
+                                </label>
+                                {{ form.country }}
+                                {% if form.country.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.country.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="{{ form.latitude.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Latitude
+                                </label>
+                                {{ form.latitude }}
+                                {% if form.latitude.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.latitude.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div>
+                                <label for="{{ form.longitude.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Longitude
+                                </label>
+                                {{ form.longitude }}
+                                {% if form.longitude.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ form.longitude.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Phone
+                            </label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.phone.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Email
+                            </label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.email.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <label for="{{ form.website.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Website
+                        </label>
+                        {{ form.website }}
+                        {% if form.website.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.website.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Pricing</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="{{ form.price_range_min.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Min Price
+                            </label>
+                            {{ form.price_range_min }}
+                            {% if form.price_range_min.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.price_range_min.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.price_range_max.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Max Price
+                            </label>
+                            {{ form.price_range_max }}
+                            {% if form.price_range_max.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.price_range_max.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.currency.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Currency
+                            </label>
+                            {{ form.currency }}
+                            {% if form.currency.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.currency.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- External Links -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">External Booking Links</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.booking_com_link.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Booking.com Link
+                            </label>
+                            {{ form.booking_com_link }}
+                            {% if form.booking_com_link.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.booking_com_link.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.trip_com_link.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Trip.com Link
+                            </label>
+                            {{ form.trip_com_link }}
+                            {% if form.trip_com_link.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.trip_com_link.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Features & Amenities</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="{{ form.facilities.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Facilities (comma-separated)
+                            </label>
+                            {{ form.facilities }}
+                            <p class="mt-1 text-sm text-gray-500">e.g., WiFi, Parking, Pool, Gym</p>
+                            {% if form.facilities.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.facilities.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.languages_spoken.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Languages Spoken (comma-separated)
+                            </label>
+                            {{ form.languages_spoken }}
+                            <p class="mt-1 text-sm text-gray-500">e.g., English, Spanish, French</p>
+                            {% if form.languages_spoken.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.languages_spoken.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.amenities.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                Amenities (comma-separated)
+                            </label>
+                            {{ form.amenities }}
+                            <p class="mt-1 text-sm text-gray-500">e.g., Air Conditioning, Pet Friendly, 24/7 Service</p>
+                            {% if form.amenities.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.amenities.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images -->
+                <div class="border-b border-gray-200 pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Images</h2>
+                    <div>
+                        <label for="images" class="block text-sm font-medium text-gray-700 mb-2">
+                            Upload Images
+                        </label>
+                        <input type="file" id="images" name="images" multiple accept="image/*" 
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                        <p class="mt-1 text-sm text-gray-500">Select multiple images to upload</p>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="pb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Status</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}" class="ml-2 text-sm font-medium text-gray-700">
+                                Active (visible to users)
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            {{ form.is_featured }}
+                            <label for="{{ form.is_featured.id_for_label }}" class="ml-2 text-sm font-medium text-gray-700">
+                                Featured (show on homepage)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end space-x-4">
+                    <a href="{% url 'venues:admin_dashboard' %}" 
+                       class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit" 
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Add Venue
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

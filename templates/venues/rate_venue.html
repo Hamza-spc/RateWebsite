@@ -1,0 +1,155 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Rate {{ venue.name }} - VenueRate{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center mb-4">
+                <a href="{% url 'venues:venue_detail' venue.slug %}" 
+                   class="text-indigo-600 hover:text-indigo-700 mr-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+                <h1 class="text-3xl font-bold text-gray-900">Rate {{ venue.name }}</h1>
+            </div>
+            <p class="text-lg text-gray-600">Share your experience to help other travelers</p>
+        </div>
+
+        <!-- Venue Info -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex items-center">
+                {% if venue.images.first %}
+                    <img src="{{ venue.images.first.image.url }}" alt="{{ venue.name }}" class="w-16 h-16 object-cover rounded-lg">
+                {% else %}
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">{{ venue.name|first|upper }}</span>
+                    </div>
+                {% endif %}
+                
+                <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-900">{{ venue.name }}</h2>
+                    <p class="text-gray-600">{{ venue.category.name }}</p>
+                    <p class="text-sm text-gray-500">{{ venue.city }}, {{ venue.country }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Form -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Rating -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">
+                        How would you rate this venue? *
+                    </label>
+                    <div class="flex items-center space-x-2">
+                        {{ form.rating }}
+                        <div class="ml-4">
+                            <div id="star-display" class="flex space-x-1 cursor-pointer">
+                                <span class="text-3xl text-gray-300 hover:text-yellow-400 transition-colors duration-200" data-rating="1">★</span>
+                                <span class="text-3xl text-gray-300 hover:text-yellow-400 transition-colors duration-200" data-rating="2">★</span>
+                                <span class="text-3xl text-gray-300 hover:text-yellow-400 transition-colors duration-200" data-rating="3">★</span>
+                                <span class="text-3xl text-gray-300 hover:text-yellow-400 transition-colors duration-200" data-rating="4">★</span>
+                                <span class="text-3xl text-gray-300 hover:text-yellow-400 transition-colors duration-200" data-rating="5">★</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">Click on the stars to rate</p>
+                        </div>
+                    </div>
+                    {% if form.rating.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.rating.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Comment -->
+                <div>
+                    <label for="{{ form.comment.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Write a review (optional)
+                    </label>
+                    {{ form.comment }}
+                    <p class="mt-1 text-sm text-gray-500">Share details about your experience to help other travelers</p>
+                    {% if form.comment.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.comment.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end space-x-4">
+                    <a href="{% url 'venues:venue_detail' venue.slug %}" 
+                       class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit" 
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Submit Review
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Guidelines -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-3">Review Guidelines</h3>
+            <ul class="text-sm text-blue-800 space-y-2">
+                <li>• Be honest and constructive in your feedback</li>
+                <li>• Focus on your personal experience</li>
+                <li>• Avoid offensive language or personal attacks</li>
+                <li>• Include specific details about what you liked or didn't like</li>
+                <li>• Your review will help other travelers make informed decisions</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratingInput = document.getElementById('{{ form.rating.id_for_label }}');
+        const starDisplay = document.getElementById('star-display');
+        const stars = starDisplay.querySelectorAll('span');
+        
+        // Update star display based on rating value
+        function updateStars(rating) {
+            stars.forEach((star, index) => {
+                const starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+        
+        // Initial display
+        updateStars(parseInt(ratingInput.value) || 0);
+        
+        // Click on stars to select rating
+        stars.forEach((star) => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                ratingInput.value = rating;
+                updateStars(rating);
+            });
+            
+            star.addEventListener('mouseenter', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                updateStars(rating);
+            });
+        });
+        
+        // Reset on mouse leave
+        starDisplay.addEventListener('mouseleave', function() {
+            updateStars(parseInt(ratingInput.value) || 0);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,270 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ venue.name }} - VenueRate{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <!-- Hero Section -->
+    <div class="relative">
+        {% if venue.images.first %}
+            <img src="{{ venue.images.first.image.url }}" alt="{{ venue.name }}" class="w-full h-96 object-cover">
+        {% else %}
+            <div class="w-full h-96 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <span class="text-white text-6xl font-bold">{{ venue.name|first|upper }}</span>
+            </div>
+        {% endif %}
+        
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+            <div class="max-w-7xl mx-auto">
+                <h1 class="text-4xl font-bold text-white mb-2">{{ venue.name }}</h1>
+                <p class="text-xl text-gray-200 mb-4">{{ venue.category.name }}</p>
+                <div class="flex items-center text-white">
+                    <span class="text-yellow-400 text-2xl">★</span>
+                    <span class="ml-2 text-2xl font-semibold">{{ venue.average_rating|floatformat:1 }}</span>
+                    <span class="ml-2 text-lg">({{ venue.total_ratings }} ratings)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <!-- Description -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">About</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ venue.description }}</p>
+                </div>
+
+                <!-- Image Gallery -->
+                {% if venue.images.count > 1 %}
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Photos</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {% for image in venue.images.all %}
+                        <div class="aspect-square overflow-hidden rounded-lg">
+                            <img src="{{ image.image.url }}" alt="{{ image.caption|default:venue.name }}" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-200">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Reviews Section -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Reviews</h2>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'venues:rate_venue' venue.slug %}" 
+                               class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                Write a Review
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    {% if ratings %}
+                        <div class="space-y-6">
+                            {% for rating in ratings %}
+                            <div class="border-b border-gray-200 pb-6 last:border-b-0">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 bg-indigo-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold">{{ rating.user.first_name|first|default:rating.user.username|first|upper }}</span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="font-semibold text-gray-900">
+                                                {{ rating.user.first_name|default:rating.user.username }}
+                                            </p>
+                                            <div class="flex items-center">
+                                                {% for i in "12345" %}
+                                                    <span class="text-yellow-400 text-sm">
+                                                        {% if forloop.counter <= rating.rating %}★{% else %}☆{% endif %}
+                                                    </span>
+                                                {% endfor %}
+                                                <span class="ml-2 text-sm text-gray-500">{{ rating.created_at|date:"M d, Y" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if rating.comment %}
+                                <p class="text-gray-700 mt-2">{{ rating.comment }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8">
+                            <p class="text-gray-500 mb-4">No reviews yet. Be the first to review this venue!</p>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'venues:rate_venue' venue.slug %}" 
+                                   class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                    Write the First Review
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Contact Info -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-gray-400 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <div>
+                                <p class="text-gray-700">{{ venue.address }}</p>
+                                <p class="text-gray-600">{{ venue.city }}, {{ venue.country }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if venue.phone %}
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            <a href="tel:{{ venue.phone }}" class="text-indigo-600 hover:text-indigo-700">{{ venue.phone }}</a>
+                        </div>
+                        {% endif %}
+                        
+                        {% if venue.email %}
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            <a href="mailto:{{ venue.email }}" class="text-indigo-600 hover:text-indigo-700">{{ venue.email }}</a>
+                        </div>
+                        {% endif %}
+                        
+                        {% if venue.website %}
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                            <a href="{{ venue.website }}" target="_blank" class="text-indigo-600 hover:text-indigo-700">Visit Website</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Price Range -->
+                {% if venue.price_range_min and venue.price_range_max %}
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Price Range</h3>
+                    <p class="text-2xl font-semibold text-indigo-600">
+                        {{ venue.currency }} {{ venue.price_range_min }} - {{ venue.price_range_max }}
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- External Booking Links -->
+                {% if venue.booking_com_link or venue.trip_com_link %}
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Book Now</h3>
+                    <div class="space-y-3">
+                        {% if venue.booking_com_link %}
+                        <a href="{{ venue.booking_com_link }}" target="_blank" 
+                           class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition duration-200">
+                            Book on Booking.com
+                        </a>
+                        {% endif %}
+                        {% if venue.trip_com_link %}
+                        <a href="{{ venue.trip_com_link }}" target="_blank" 
+                           class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg text-center transition duration-200">
+                            Book on Trip.com
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Facilities -->
+                {% if venue.facilities %}
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Facilities</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for facility in venue.facilities %}
+                        <span class="inline-block bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">
+                            {{ facility }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Languages Spoken -->
+                {% if venue.languages_spoken %}
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Languages Spoken</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for language in venue.languages_spoken %}
+                        <span class="inline-block bg-indigo-100 text-indigo-700 text-sm px-3 py-1 rounded-full">
+                            {{ language }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Amenities -->
+                {% if venue.amenities %}
+                <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Amenities</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for amenity in venue.amenities %}
+                        <span class="inline-block bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full">
+                            {{ amenity }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Nearby Venues -->
+        {% if nearby_venues %}
+        <div class="mt-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Nearby Venues</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for nearby_venue in nearby_venues %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    {% if nearby_venue.images.first %}
+                        <img src="{{ nearby_venue.images.first.image.url }}" alt="{{ nearby_venue.name }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+                            <span class="text-white text-2xl font-bold">{{ nearby_venue.name|first|upper }}</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ nearby_venue.name }}</h3>
+                        <p class="text-sm text-indigo-600 mb-2">{{ nearby_venue.category.name }}</p>
+                        <div class="flex items-center mb-2">
+                            <span class="text-yellow-400">★</span>
+                            <span class="ml-1 text-gray-700 font-semibold">{{ nearby_venue.average_rating|floatformat:1 }}</span>
+                            <span class="text-gray-500 text-sm ml-1">({{ nearby_venue.total_ratings }})</span>
+                        </div>
+                        <a href="{% url 'venues:venue_detail' nearby_venue.slug %}" 
+                           class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition duration-200">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

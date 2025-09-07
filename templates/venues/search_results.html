@@ -1,0 +1,249 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Search Results - VenueRate{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Search Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Search Results</h1>
+                    {% if search_query or category_filter or location_filter %}
+                        <p class="mt-2 text-gray-600">
+                            {% if search_query %}
+                                Searching for "{{ search_query }}"
+                            {% endif %}
+                            {% if category_filter %}
+                                in {{ category_filter|title }}
+                            {% endif %}
+                            {% if location_filter %}
+                                near {{ location_filter }}
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'venues:home' %}" 
+                   class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                    ← Back to Home
+                </a>
+            </div>
+
+            <!-- Search Form -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <form method="get" action="{% url 'venues:venue_search' %}" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="q" class="block text-sm font-medium text-gray-700 mb-2">
+                                What are you looking for?
+                            </label>
+                            <input type="text" 
+                                   name="q" 
+                                   id="q" 
+                                   value="{{ search_query }}"
+                                   placeholder="Search venues..."
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
+                                Location
+                            </label>
+                            <input type="text" 
+                                   name="location" 
+                                   id="location" 
+                                   value="{{ location_filter }}"
+                                   placeholder="City or country..."
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                                Category
+                            </label>
+                            <select name="category" 
+                                    id="category" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">All Categories</option>
+                                <option value="hotels" {% if category_filter == 'hotels' %}selected{% endif %}>Hotels</option>
+                                <option value="restaurants" {% if category_filter == 'restaurants' %}selected{% endif %}>Restaurants</option>
+                                <option value="cafes" {% if category_filter == 'cafes' %}selected{% endif %}>Cafes</option>
+                                <option value="amusement-parks" {% if category_filter == 'amusement-parks' %}selected{% endif %}>Amusement Parks</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <button type="submit" 
+                                class="bg-indigo-600 text-white px-8 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                            Search Venues
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold text-gray-900">
+                    {% if venues %}
+                        {{ venues.count }} venue{{ venues.count|pluralize }} found
+                    {% else %}
+                        No venues found
+                    {% endif %}
+                </h2>
+                
+                {% if venues %}
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">Sort by:</span>
+                    <select class="text-sm border border-gray-300 rounded px-2 py-1">
+                        <option value="rating">Rating</option>
+                        <option value="name">Name</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Venues Grid -->
+        {% if venues %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for venue in venues %}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition duration-200">
+                    <!-- Venue Image -->
+                    <div class="h-48 bg-gray-200 relative">
+                        {% if venue.images.first %}
+                            <img src="{{ venue.images.first.image.url }}" 
+                                 alt="{{ venue.name }}" 
+                                 class="w-full h-full object-cover">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Category Badge -->
+                        <div class="absolute top-3 left-3">
+                            <span class="bg-indigo-600 text-white text-xs px-2 py-1 rounded-full">
+                                {{ venue.category.name }}
+                            </span>
+                        </div>
+                        
+                        <!-- Rating Badge -->
+                        {% if venue.average_rating > 0 %}
+                        <div class="absolute top-3 right-3">
+                            <span class="bg-yellow-400 text-yellow-900 text-xs px-2 py-1 rounded-full font-semibold">
+                                ⭐ {{ venue.average_rating|floatformat:1 }}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Venue Info -->
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                            <a href="{% url 'venues:venue_detail' venue.slug %}" 
+                               class="hover:text-indigo-600 transition duration-200">
+                                {{ venue.name }}
+                            </a>
+                        </h3>
+                        
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                            {{ venue.description|truncatewords:20 }}
+                        </p>
+                        
+                        <div class="flex items-center text-sm text-gray-500 mb-3">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            {{ venue.city }}, {{ venue.country }}
+                        </div>
+                        
+                        <!-- Price Range -->
+                        {% if venue.price_range_min or venue.price_range_max %}
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                            {% if venue.price_range_min and venue.price_range_max %}
+                                {{ venue.price_range_min }} - {{ venue.price_range_max }} {{ venue.currency }}
+                            {% elif venue.price_range_min %}
+                                From {{ venue.price_range_min }} {{ venue.currency }}
+                            {% elif venue.price_range_max %}
+                                Up to {{ venue.price_range_max }} {{ venue.currency }}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Reviews Count -->
+                        {% if venue.total_ratings > 0 %}
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                            {{ venue.total_ratings }} review{{ venue.total_ratings|pluralize }}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-2">
+                            <a href="{% url 'venues:venue_detail' venue.slug %}" 
+                               class="flex-1 bg-indigo-600 text-white text-center py-2 px-3 rounded-lg hover:bg-indigo-700 transition duration-200 text-sm">
+                                View Details
+                            </a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'venues:rate_venue' venue.slug %}" 
+                               class="bg-gray-100 text-gray-700 py-2 px-3 rounded-lg hover:bg-gray-200 transition duration-200 text-sm">
+                                Rate
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- No Results -->
+            <div class="text-center py-12">
+                <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No venues found</h3>
+                <p class="text-gray-500 mb-6">
+                    {% if search_query or category_filter or location_filter %}
+                        Try adjusting your search criteria or browse all venues.
+                    {% else %}
+                        Start by searching for venues using the form above.
+                    {% endif %}
+                </p>
+                <div class="space-x-4">
+                    <a href="{% url 'venues:venue_list' %}" 
+                       class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                        Browse All Venues
+                    </a>
+                    <a href="{% url 'venues:home' %}" 
+                       class="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 transition duration-200">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

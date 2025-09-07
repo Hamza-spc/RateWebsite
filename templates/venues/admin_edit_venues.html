@@ -1,0 +1,258 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Edit/Delete {{ category.name }} - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header with Navigation -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <a href="{% url 'venues:admin_dashboard' %}" 
+                           class="text-indigo-600 hover:text-indigo-700 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </a>
+                        <h1 class="text-3xl font-bold text-gray-900">Edit/Delete {{ category.name }}</h1>
+                    </div>
+                    <p class="text-lg text-gray-600">Manage and delete {{ category.name|lower }} in your database</p>
+                </div>
+                
+                <!-- Admin Navigation -->
+                <div class="flex space-x-4">
+                    <a href="{% url 'venues:admin_venues_by_category' category.slug %}" 
+                       class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                        View Places
+                    </a>
+                    <a href="{% url 'venues:add_venue' %}?category={{ category.slug }}" 
+                       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                        Add Place
+                    </a>
+                    <a href="{% url 'venues:admin_edit_venues' category.slug %}" 
+                       class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-200">
+                        Edit/Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Bulk Actions</h3>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="toggleAllCheckboxes()" 
+                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200">
+                    Select All
+                </button>
+                <button onclick="bulkActivate()" 
+                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                    Activate Selected
+                </button>
+                <button onclick="bulkDeactivate()" 
+                        class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-200">
+                    Deactivate Selected
+                </button>
+                <button onclick="bulkDelete()" 
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200">
+                    Delete Selected
+                </button>
+            </div>
+        </div>
+
+        <!-- Venues Grid for Editing -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for venue in venues %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <!-- Checkbox -->
+                <div class="p-4 border-b border-gray-200">
+                    <label class="flex items-center">
+                        <input type="checkbox" 
+                               class="venue-checkbox rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" 
+                               value="{{ venue.id }}">
+                        <span class="ml-2 text-sm font-medium text-gray-900">Select for bulk action</span>
+                    </label>
+                </div>
+
+                <!-- Venue Image -->
+                {% if venue.images.first %}
+                    <img src="{{ venue.images.first.image.url }}" alt="{{ venue.name }}" class="w-full h-48 object-cover">
+                {% else %}
+                    <div class="w-full h-48 bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+                        <span class="text-white text-2xl font-bold">{{ venue.name|first|upper }}</span>
+                    </div>
+                {% endif %}
+
+                <!-- Venue Info -->
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ venue.name }}</h3>
+                    <p class="text-sm text-gray-600 mb-2">{{ venue.city }}, {{ venue.country }}</p>
+                    
+                    <div class="flex items-center mb-4">
+                        <span class="text-yellow-400">★</span>
+                        <span class="ml-1 text-sm font-medium text-gray-900">{{ venue.average_rating|floatformat:1 }}</span>
+                        <span class="ml-1 text-sm text-gray-500">({{ venue.total_ratings }})</span>
+                    </div>
+
+                    <!-- Status Badges -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% if venue.is_active %}
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                Active
+                            </span>
+                        {% else %}
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                Inactive
+                            </span>
+                        {% endif %}
+                        {% if venue.is_featured %}
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                Featured
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Quick Edit Form -->
+                    <form method="post" class="space-y-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="venue_id" value="{{ venue.id }}">
+                        
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="is_active" {% if venue.is_active %}checked{% endif %} 
+                                       class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <span class="ml-2 text-sm text-gray-700">Active</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="is_featured" {% if venue.is_featured %}checked{% endif %} 
+                                       class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <span class="ml-2 text-sm text-gray-700">Featured</span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" name="action" value="update" 
+                                class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200">
+                            Update Status
+                        </button>
+                    </form>
+
+                    <!-- Individual Actions -->
+                    <div class="mt-4 flex space-x-2">
+                        {% if venue.slug %}
+                            <a href="{% url 'venues:venue_detail' venue.slug %}" 
+                               class="flex-1 text-center bg-gray-100 text-gray-700 py-2 px-3 rounded-lg hover:bg-gray-200 transition duration-200">
+                                View
+                            </a>
+                        {% else %}
+                            <span class="flex-1 text-center bg-gray-50 text-gray-400 py-2 px-3 rounded-lg">
+                                No slug
+                            </span>
+                        {% endif %}
+                        <a href="{% url 'venues:edit_venue' venue.id %}" 
+                           class="flex-1 text-center bg-yellow-100 text-yellow-700 py-2 px-3 rounded-lg hover:bg-yellow-200 transition duration-200">
+                            Edit
+                        </a>
+                        <a href="{% url 'venues:delete_venue' venue.id %}" 
+                           class="flex-1 text-center bg-red-100 text-red-700 py-2 px-3 rounded-lg hover:bg-red-200 transition duration-200"
+                           onclick="return confirm('Are you sure you want to delete {{ venue.name }}?')">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">No {{ category.name|lower }} found</h3>
+                <p class="text-gray-600 mb-6">No {{ category.name|lower }} have been added yet.</p>
+                <a href="{% url 'venues:add_venue' %}?category={{ category.slug }}" 
+                   class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                    Add First {{ category.name|slice:":-1" }}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAllCheckboxes() {
+    const checkboxes = document.querySelectorAll('.venue-checkbox');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    checkboxes.forEach(cb => cb.checked = !allChecked);
+}
+
+function bulkActivate() {
+    const selectedIds = getSelectedVenueIds();
+    if (selectedIds.length === 0) {
+        alert('Please select venues to activate');
+        return;
+    }
+    if (confirm(`Activate ${selectedIds.length} selected venues?`)) {
+        performBulkAction('activate', selectedIds);
+    }
+}
+
+function bulkDeactivate() {
+    const selectedIds = getSelectedVenueIds();
+    if (selectedIds.length === 0) {
+        alert('Please select venues to deactivate');
+        return;
+    }
+    if (confirm(`Deactivate ${selectedIds.length} selected venues?`)) {
+        performBulkAction('deactivate', selectedIds);
+    }
+}
+
+function bulkDelete() {
+    const selectedIds = getSelectedVenueIds();
+    if (selectedIds.length === 0) {
+        alert('Please select venues to delete');
+        return;
+    }
+    if (confirm(`Delete ${selectedIds.length} selected venues? This action cannot be undone!`)) {
+        performBulkAction('delete', selectedIds);
+    }
+}
+
+function getSelectedVenueIds() {
+    const checkboxes = document.querySelectorAll('.venue-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function performBulkAction(action, venueIds) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{% url "venues:admin_bulk_action" category.slug %}';
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = action;
+    form.appendChild(actionInput);
+    
+    venueIds.forEach(id => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'venue_ids';
+        input.value = id;
+        form.appendChild(input);
+    });
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+{% endblock %}

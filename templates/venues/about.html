@@ -1,0 +1,179 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}About Us - VenueRate{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">About VenueRate</h1>
+            <p class="text-xl text-indigo-100 max-w-3xl mx-auto">
+                We're on a mission to help travelers discover amazing venues around the world through authentic reviews and ratings from a community of passionate explorers.
+            </p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <!-- Our Story -->
+        <div class="mb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        VenueRate was born from a simple idea: travelers deserve access to honest, reliable information about places to stay, eat, and explore. We believe that the best recommendations come from real people who have experienced these venues firsthand.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Founded in 2024, we've built a platform that connects travelers with authentic reviews, detailed venue information, and a community of like-minded explorers who share their experiences to help others make informed decisions.
+                    </p>
+                    <p class="text-lg text-gray-600">
+                        Whether you're planning a weekend getaway, a business trip, or a once-in-a-lifetime adventure, VenueRate helps you find the perfect places to create unforgettable memories.
+                    </p>
+                </div>
+                <div class="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-lg p-8">
+                    <div class="text-center">
+                        <svg class="mx-auto h-24 w-24 text-indigo-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Our Mission</h3>
+                        <p class="text-gray-600">To make travel planning easier and more enjoyable by providing authentic venue reviews and ratings from real travelers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="bg-gray-50 rounded-lg p-8 mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">By the Numbers</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-indigo-600 mb-2">{{ stats.total_venues|add:stats.total_hotels|add:stats.total_restaurants|add:stats.total_cafes|add:stats.total_attractions }}+</div>
+                    <div class="text-gray-600">Venues Listed</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-indigo-600 mb-2">{{ stats.total_users }}+</div>
+                    <div class="text-gray-600">Active Users</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-indigo-600 mb-2">{{ stats.total_ratings }}+</div>
+                    <div class="text-gray-600">Reviews & Ratings</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-indigo-600 mb-2">{{ stats.total_cities }}+</div>
+                    <div class="text-gray-600">Cities Covered</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What We Offer -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">What We Offer</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Smart Search</h3>
+                    <p class="text-gray-600">Find exactly what you're looking for with our powerful search filters by location, category, price range, and more.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Authentic Reviews</h3>
+                    <p class="text-gray-600">Read honest reviews and ratings from real travelers who have experienced these venues firsthand.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Detailed Information</h3>
+                    <p class="text-gray-600">Get comprehensive details about each venue including facilities, amenities, pricing, and contact information.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Values -->
+        <div class="bg-gray-50 rounded-lg p-8 mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Our Values</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Authenticity</h3>
+                    <p class="text-gray-600">We believe in honest, genuine reviews that help travelers make informed decisions.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Community</h3>
+                    <p class="text-gray-600">We foster a supportive community of travelers who share their experiences to help others.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Quality</h3>
+                    <p class="text-gray-600">We maintain high standards for the venues we feature and the information we provide.</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Innovation</h3>
+                    <p class="text-gray-600">We continuously improve our platform to provide the best possible experience for our users.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Meet Our Team</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-2xl font-bold">JD</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">John Doe</h3>
+                    <p class="text-indigo-600 mb-2">Founder & CEO</p>
+                    <p class="text-gray-600">Passionate traveler with 10+ years in the hospitality industry.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-green-400 to-blue-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-2xl font-bold">JS</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Jane Smith</h3>
+                    <p class="text-indigo-600 mb-2">Head of Product</p>
+                    <p class="text-gray-600">Tech enthusiast focused on creating amazing user experiences.</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-pink-400 to-red-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-2xl font-bold">MJ</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Mike Johnson</h3>
+                    <p class="text-indigo-600 mb-2">Lead Developer</p>
+                    <p class="text-gray-600">Full-stack developer passionate about building scalable platforms.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="bg-indigo-600 rounded-lg p-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">Ready to Start Your Journey?</h2>
+            <p class="text-xl text-indigo-100 mb-6">Join thousands of travelers discovering amazing venues around the world.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'account_signup' %}" 
+                   class="bg-white hover:bg-gray-100 text-indigo-600 font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    Sign Up Now
+                </a>
+                <a href="{% url 'venues:venue_list' %}" 
+                   class="border-2 border-white text-white hover:bg-white hover:text-indigo-600 font-semibold py-3 px-8 rounded-lg transition duration-200">
+                    Explore Venues
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
