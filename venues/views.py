@@ -239,9 +239,21 @@ def admin_dashboard(request):
     # Get statistics
     stats = Statistics.get_or_create_stats()
     
+    # Get recent venues
+    recent_venues = Venue.objects.filter(is_active=True).order_by('-created_at')[:5]
+    
+    # Get recent ratings
+    recent_ratings = Rating.objects.select_related('venue', 'user').order_by('-created_at')[:5]
+    
+    # Get recent contact messages
+    contact_messages = ContactMessage.objects.order_by('-created_at')[:5]
+    
     context = {
         'categories': categories,
         'stats': stats,
+        'recent_venues': recent_venues,
+        'recent_ratings': recent_ratings,
+        'contact_messages': contact_messages,
     }
     return render(request, 'venues/admin_dashboard.html', context)
 
