@@ -53,6 +53,8 @@ A Django-based web application for discovering, rating, and reviewing venues lik
    # Edit .env with your configuration
    ```
 
+   **Important:** The project will work without Google OAuth setup, but you'll need to configure it for the "Sign in with Google" feature to work.
+
 5. **Run database migrations**
    ```bash
    python manage.py migrate
@@ -75,6 +77,25 @@ A Django-based web application for discovering, rating, and reviewing venues lik
 
 9. **Visit the application**
    Open your browser and go to `http://127.0.0.1:8000`
+
+## Optional Setup
+
+### Video Background (Homepage)
+The homepage has a video background that will fallback to a gradient if no video is found. To add a video:
+1. Place your video file in `assets/videos/` as `hero-video.mp4`
+2. The video should be in MP4 format and optimized for web
+
+### Google OAuth (Optional)
+The "Sign in with Google" feature requires additional setup:
+1. Get Google OAuth credentials from [Google Cloud Console](https://console.cloud.google.com/)
+2. Add them to your `.env` file:
+   ```env
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   ```
+3. Run: `python manage.py setup_google_oauth`
+
+**Note:** The app works perfectly without Google OAuth - users can still sign up with email/password.
 
 ## Project Structure
 
